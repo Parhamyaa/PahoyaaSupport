@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PahoyaaSupport</title>
+<style>
+:root{color-scheme:dark;--bg:#000;--panel:#070707;--panel2:#0c0c0c;--line:#171717;--text:#f5f7fa;--muted:#8c929b;--blue:#66d9ff;--blue2:#19bce8}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#000;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button{font:inherit}
+#app{min-height:100vh;background:#000;padding:28px;}
+.shell{max-width:1180px;margin:auto;border:1px solid #101010;background:#020202;box-shadow:0 0 60px #00151d;border-radius:20px;overflow:hidden}
+header{padding:34px 34px 26px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#050505,#010101)}
+.brand{display:flex;align-items:center;gap:14px}.logo{width:42px;height:42px;border-radius:12px;background:#071b22;border:1px solid #1b9fc0;color:var(--blue);display:grid;place-items:center;font-weight:900;box-shadow:0 0 22px #0a6a80}.brand h1{margin:0;font-size:25px;letter-spacing:-.5px}.brand span{color:var(--blue)}
+header p{margin:12px 0 0;color:#9aa1aa;max-width:760px;line-height:1.6}.content{display:grid;grid-template-columns:280px 1fr;min-height:650px}.side{padding:20px;border-right:1px solid var(--line);background:#030303}.side-title{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#666;margin:6px 10px 10px}.nav{display:flex;flex-direction:column;gap:8px}.nav button{border:1px solid transparent;background:transparent;color:#b9bec5;text-align:left;padding:13px 14px;border-radius:10px;cursor:pointer;transition:.18s}.nav button:hover{border-color:#12343d;color:#e9fcff;background:#071115}.nav button.active{border-color:#12677b;color:var(--blue);background:#06161b;box-shadow:inset 3px 0 var(--blue),0 0 20px #06262f}.main{padding:30px}.page{display:none}.page.active{display:block}.eyebrow{color:var(--blue);font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}.page h2{margin:7px 0 9px;font-size:30px}.page .intro{color:#a0a6ae;line-height:1.65;margin:0 0 22px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{border:1px solid #151515;background:linear-gradient(145deg,#090909,#030303);border-radius:14px;padding:19px}.card h3{margin:0 0 8px;font-size:16px}.card p{margin:0;color:#8f969e;line-height:1.55;font-size:14px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px var(--blue);margin-right:8px}.codebox{margin-top:22px;border:1px solid #16272c;border-radius:14px;overflow:hidden;background:#050505}.codehead{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid #142126;color:#aeb6bc;font-size:12px}.copy{border:1px solid #1a5563;background:#07171c;color:var(--blue);border-radius:8px;padding:6px 10px;cursor:pointer}.copy:hover{background:#0b252d}.code{padding:18px;overflow:auto;color:#d7f7ff;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;max-height:410px}.notice{margin-top:14px;padding:13px 15px;border-left:2px solid var(--blue);background:#061015;color:#aeb9bf;border-radius:0 8px 8px 0;font-size:13px;line-height:1.55}.pill{display:inline-block;margin-top:7px;padding:5px 8px;border-radius:999px;background:#071b22;color:var(--blue);font-size:11px;border:1px solid #123e49}.footer{border-top:1px solid var(--line);padding:18px 30px;color:#626870;font-size:12px}
+@media(max-width:800px){#app{padding:0}.shell{border-radius:0;border-left:0;border-right:0}.content{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--line)}.nav{display:grid;grid-template-columns:repeat(2,1fr)}.main{padding:22px}.cards{grid-template-columns:1fr}}
+
+.rpgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+.rp-card{border:1px solid #15262b;background:linear-gradient(145deg,#091013,#030303);border-radius:14px;padding:18px}
+.rp-card h3{margin:0 0 7px}.rp-card p{margin:0;color:#9199a2;line-height:1.55;font-size:14px}
+.tag{display:inline-block;margin:5px 5px 0 0;padding:5px 8px;border-radius:999px;background:#071b22;color:var(--blue);border:1px solid #123e49;font-size:11px}
+@media(max-width:800px){.rpgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div id="app"><div class="shell">
+<header><div class="brand"><div class="logo">PS</div><div><h1>Pahoyaa<span>Support</span></h1></div></div><p>Interaktive Übersicht zum Erstellen von Discord-Bots – mit fertigen Beispielen für Ticket-System, Verify, Ban, Kick und Timeout.</p></header>
+<div class="content"><aside class="side"><div class="side-title">Kategorien</div><nav class="nav">
+<button class="active" data-page="start">Start</button>
+<button data-page="bots">Bots erstellen</button>
+<button data-page="ticket">Ticket System</button>
+<button data-page="verify">Verify</button>
+<button data-page="moderation">Ban / Kick / Timeout</button>
+<button data-page="welcome">Welcome & Auto-Role</button>
+<button data-page="security">Anti-Raid / Anti-Spam</button>
+<button data-page="giveaway">Giveaways</button>
+<button data-page="music">Musik-Bot</button>
+<button data-page="applications">Bewerbungen</button>
+<button data-page="logs">Logs & Statistiken</button>
+<button data-page="warnings">Warn / Mute</button>
+<button data-page="faq">FAQ & Regeln</button>
+<button data-page="hamburg">Hamburg Emergency Roleplay</button>
+</nav></aside>
+<main class="main">
+<section id="start" class="page active"><div class="eyebrow">PahoyaaSupport</div><h2>Willkommen</h2><p class="intro">Klicke links eine Kategorie an. Jede Seite erklärt kurz, was du brauchst, und zeigt darunter passenden Beispiel-Code.</p><div class="cards"><div class="card"><h3><span class="dot"></span>Discord Bot</h3><p>Ein Bot reagiert auf Befehle und Events. Dafür brauchst du eine Bot-Anwendung im Discord Developer Portal und eine JavaScript-Laufzeit wie Node.js.</p><span class="pill">discord.js</span></div><div class="card"><h3><span class="dot"></span>Module</h3><p>Installiere discord.js und speichere deinen Bot-Token sicher in einer Umgebungsvariable – nicht direkt im Code.</p><span class="pill">Node.js</span></div></div><div class="notice">Die Codebeispiele sind als Grundlage gedacht. Vor dem Einsatz musst du Rollen, Channel-IDs, Berechtigungen und die gewünschte Konfiguration anpassen.</div></section>
+<section id="bots" class="page"><div class="eyebrow">Grundlagen</div><h2>Bots erstellen</h2><p class="intro">Erstelle im Discord Developer Portal eine Application, füge einen Bot hinzu, lade ihn mit den nötigen Scopes ein und lege lokal ein Node.js-Projekt an.</p><div class="cards"><div class="card"><h3>1. Projekt</h3><p><b>npm init -y</b> ausführen und anschließend <b>npm i discord.js dotenv</b> installieren.</p></div><div class="card"><h3>2. Token</h3><p>Token in eine <b>.env</b>-Datei legen und die Datei niemals öffentlich hochladen.</p></div><div class="card"><h3>3. Start</h3><p>Den Bot mit <b>node index.js</b> starten und in der Konsole auf eine erfolgreiche Anmeldung achten.</p></div><div class="card"><h3>4. Berechtigungen</h3><p>Für Moderationsbefehle braucht der Bot passende Discord-Berechtigungen und eine Rolle mit ausreichender Position.</p></div></div>
+<div class="codebox"><div class="codehead"><span>Grundgerüst · index.js</span><button class="copy" data-copy="botbase">Kopieren</button></div><pre class="code" id="botbase">require('dotenv').config();
+const { Client, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds]
+});
+
+client.once('ready', () => {
+  console.log(`Online als ${client.user.tag}`);
+});
+
+client.login(process.env.DISCORD_TOKEN);</pre></div></section>
+<section id="ticket" class="page"><div class="eyebrow">Support</div><h2>Ticket System</h2><p class="intro">Ein einfaches Slash-Command-System: <b>/ticket</b> erstellt einen privaten Support-Channel für den Nutzer. Ergänze später Buttons zum Schließen oder Löschen.</p><div class="codebox"><div class="codehead"><span>ticket.js</span><button class="copy" data-copy="ticketcode">Kopieren</button></div><pre class="code" id="ticketcode">const { ChannelType, PermissionFlagsBits } = require('discord.js');
+
+async function createTicket(interaction) {
+  const channel = await interaction.guild.channels.create({
+    name: `ticket-${interaction.user.username}`,
+    type: ChannelType.GuildText,
+    permissionOverwrites: [
+      { id: interaction.guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
+      { id: interaction.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] },
+      // Hier die ID deiner Support-Rolle einsetzen:
+      { id: process.env.SUPPORT_ROLE_ID, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] }
+    ]
+  });
+
+  await interaction.reply({ content: `Ticket erstellt: ${channel}`, ephemeral: true });
+}
+
+// Beispiel: in deinem Interaction-Handler
+// if (interaction.commandName === 'ticket') createTicket(interaction);</pre></div></section>
+<section id="verify" class="page"><div class="eyebrow">Sicherheit</div><h2>Verify</h2><p class="intro">Ein Verify-Befehl kann einem Nutzer nach Bestätigung eine Rolle geben. Die Rollen-ID kommt aus deiner Server-Konfiguration.</p><div class="codebox"><div class="codehead"><span>verify.js</span><button class="copy" data-copy="verifycode">Kopieren</button></div><pre class="code" id="verifycode">const { PermissionFlagsBits } = require('discord.js');
+
+async function verify(interaction) {
+  const role = interaction.guild.roles.cache.get(process.env.VERIFIED_ROLE_ID);
+  if (!role) return interaction.reply({ content: 'Verify-Rolle nicht gefunden.', ephemeral: true });
+
+  await interaction.member.roles.add(role);
+  await interaction.reply({ content: 'Du wurdest erfolgreich verifiziert!', ephemeral: true });
+}
+
+// In deinem Interaction-Handler:
+// if (interaction.commandName === 'verify') verify(interaction);</pre></div></section>
+<section id="moderation" class="page"><div class="eyebrow">Moderation</div><h2>Ban / Kick / Timeout</h2><p class="intro">Diese Befehle sollten nur für Moderatoren verfügbar sein. Der Bot muss die jeweilige Discord-Berechtigung besitzen.</p><div class="codebox"><div class="codehead"><span>moderation.js</span><button class="copy" data-copy="modcode">Kopieren</button></div><pre class="code" id="modcode">const { PermissionFlagsBits } = require('discord.js');
+
+async function ban(interaction, user) {
+  if (!interaction.member.permissions.has(PermissionFlagsBits.BanMembers))
+    return interaction.reply({ content: 'Keine Berechtigung.', ephemeral: true });
+  await interaction.guild.members.ban(user, { reason: `Ban von ${interaction.user.tag}` });
+  await interaction.reply({ content: `${user.tag} wurde gebannt.` });
+}
+
+async function kick(interaction, member) {
+  if (!interaction.member.permissions.has(PermissionFlagsBits.KickMembers))
+    return interaction.reply({ content: 'Keine Berechtigung.', ephemeral: true });
+  await member.kick(`Kick von ${interaction.user.tag}`);
+  await interaction.reply({ content: `${member.user.tag} wurde gekickt.` });
+}
+
+async function timeout(interaction, member, durationMs = 10 * 60 * 1000) {
+  if (!interaction.member.permissions.has(PermissionFlagsBits.ModerateMembers))
+    return interaction.reply({ content: 'Keine Berechtigung.', ephemeral: true });
+  await member.timeout(durationMs, `Timeout von ${interaction.user.tag}`);
+  await interaction.reply({ content: `${member.user.tag} hat einen Timeout erhalten.` });
+}
+
+// Die Funktionen in deinem Slash-Command-Handler aufrufen.</pre></div></section>
+
+<section id="welcome" class="page"><div class="eyebrow">Community</div><h2>Welcome & Auto-Role</h2><p class="intro">Begrüßung neuer Mitglieder und automatische Rollenvergabe.</p>
+<div class="codebox"><div class="codehead"><span>welcome.js</span><button class="copy" data-copy="welcomecode">Kopieren</button></div><pre class="code" id="welcomecode">const { Events } = require('discord.js');
+
+client.on(Events.GuildMemberAdd, async member =&gt; {
+  const role = member.guild.roles.cache.get(process.env.MEMBER_ROLE_ID);
+  if (role) await member.roles.add(role).catch(() =&gt; {});
+
+  const channel = member.guild.channels.cache.get(process.env.WELCOME_CHANNEL_ID);
+  if (channel) channel.send(`Willkommen ${member} auf dem Server!`);
+});</pre></div></section>
+
+<section id="security" class="page"><div class="eyebrow">Sicherheit</div><h2>Anti-Raid / Anti-Spam</h2><p class="intro">Grundschutz gegen Spam und schnelle Join-Wellen. Werte und Aktionen kannst du über Umgebungsvariablen anpassen.</p>
+<div class="codebox"><div class="codehead"><span>security.js</span><button class="copy" data-copy="securitycode">Kopieren</button></div><pre class="code" id="securitycode">const joins = new Map();
+const messages = new Map();
+
+client.on('guildMemberAdd', member =&gt; {
+  const now = Date.now();
+  const list = (joins.get(member.guild.id) || []).filter(t =&gt; now - t &lt; 60000);
+  list.push(now);
+  joins.set(member.guild.id, list);
+
+  if (list.length &gt;= 8) {
+    console.log(`Möglicher Raid auf ${member.guild.name}`);
+    // Hier eigene Lockdown-/Logik-Funktion aufrufen.
+  }
+});
+
+client.on('messageCreate', async message =&gt; {
+  if (message.author.bot || !message.guild) return;
+  const key = `${message.guild.id}:${message.author.id}`;
+  const now = Date.now();
+  const list = (messages.get(key) || []).filter(t =&gt; now - t &lt; 5000);
+  list.push(now);
+  messages.set(key, list);
+
+  if (list.length &gt;= 6) {
+    await message.member.timeout(60_000, 'Anti-Spam').catch(() =&gt; {});
+  }
+});</pre></div></section>
+
+<section id="giveaway" class="page"><div class="eyebrow">Events</div><h2>Giveaways</h2><p class="intro">Ein einfaches Reaktions-Giveaway als Grundlage.</p>
+<div class="codebox"><div class="codehead"><span>giveaway.js</span><button class="copy" data-copy="giveawaycode">Kopieren</button></div><pre class="code" id="giveawaycode">async function startGiveaway(channel, prize, durationMs) {
+  const msg = await channel.send(`🎉 Giveaway: **${prize}**\nReagiere mit 🎉! Dauer: ${durationMs / 1000}s`);
+  await msg.react('🎉');
+
+  setTimeout(async () =&gt; {
+    const fresh = await channel.messages.fetch(msg.id);
+    const reaction = fresh.reactions.cache.get('🎉');
+    const users = reaction ? await reaction.users.fetch() : new Map();
+    const participants = [...users.values()].filter(u =&gt; !u.bot);
+
+    if (!participants.length) return channel.send('Keine Teilnehmer.');
+    const winner = participants[Math.floor(Math.random() * participants.length)];
+    channel.send(`🎉 Gewinner: ${winner}! Preis: **${prize}**`);
+  }, durationMs);
+}</pre></div></section>
+
+<section id="music" class="page"><div class="eyebrow">Entertainment</div><h2>Musik-Bot</h2><p class="intro">Mit <b>/play</b> kann der Bot dem Sprachkanal beitreten und einen angegebenen Titel bzw. eine Audio-URL abspielen. Zusätzlich gibt es Skip, Stop und Leave.</p>
+<div class="cards">
+<div class="card"><h3>/play &lt;titel oder URL&gt;</h3><p>Bot kommt in deinen aktuellen Sprachkanal und startet die angegebene Musik.</p></div>
+<div class="card"><h3>/skip</h3><p>Überspringt den aktuellen Titel und spielt den nächsten aus der Queue.</p></div>
+<div class="card"><h3>/queue</h3><p>Zeigt die Titel in der Warteschlange.</p></div>
+<div class="card"><h3>/stop</h3><p>Stoppt die Wiedergabe und leert die Warteschlange.</p></div>
+<div class="card"><h3>/leave</h3><p>Bot verlässt den Sprachkanal und beendet die Wiedergabe.</p></div>
+</div>
+<div class="codebox"><div class="codehead"><span>music.js · Play + Voice + Queue</span><button class="copy" data-copy="musiccode">Kopieren</button></div><pre class="code" id="musiccode">const {
+  SlashCommandBuilder,
+  PermissionFlagsBits
+} = require('discord.js');
+
+const {
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  AudioPlayerStatus,
+  NoSubscriberBehavior,
+  VoiceConnectionStatus,
+  entersState
+} = require('@discordjs/voice');
+
+const play = require('play-dl');
+
+const queues = new Map();
+
+function getQueue(guildId) {
+  if (!queues.has(guildId)) {
+    const player = createAudioPlayer({
+      behaviors: {
+        noSubscriber: NoSubscriberBehavior.Pause
+      }
+    });
+
+    const queue = {
+      songs: [],
+      connection: null,
+      player,
+      playing: false
+    };
+
+    player.on(AudioPlayerStatus.Idle, () =&gt; {
+      queue.songs.shift();
+      queue.playing = false;
+      const textChannel = queue.textChannel;
+      if (textChannel) playNext(guildId, textChannel);
+    });
+
+    queues.set(guildId, queue);
+  }
+  return queues.get(guildId);
+}
+
+async function playNext(guildId, channel) {
+  const queue = queues.get(guildId);
+  if (!queue || queue.songs.length === 0) {
+    queue.playing = false;
+    return;
+  }
+
+  const song = queue.songs[0];
+
+  try {
+    const stream = await play.stream(song.url, {
+      discordPlayerCompatibility: true
+    });
+
+    const resource = createAudioResource(stream.stream, {
+      inputType: stream.type
+    });
+
+    queue.player.play(resource);
+    queue.playing = true;
+
+    await channel.send(`🎵 Jetzt läuft: **${song.title}**`);
+  } catch (error) {
+    console.error('Musikfehler:', error);
+    queue.songs.shift();
+    await channel.send('❌ Dieser Titel konnte nicht abgespielt werden.');
+    return playNext(guildId, channel);
+  }
+}
+
+async function connectAndPlay(interaction, query) {
+  const voiceChannel = interaction.member.voice.channel;
+
+  if (!voiceChannel) {
+    return interaction.reply({
+      content: '❌ Du musst zuerst einem Sprachkanal beitreten.',
+      ephemeral: true
+    });
+  }
+
+  const queue = getQueue(interaction.guild.id);
+  queue.textChannel = interaction.channel;
+
+  let url = query;
+  let title = query;
+
+  // Wenn keine URL angegeben wurde, wird nach dem Titel gesucht.
+  if (!/^https?:\\/\\//i.test(query)) {
+    const results = await play.search(query, {
+      limit: 1,
+      source: { youtube: 'video' }
+    });
+
+    if (!results.length) {
+      return interaction.reply({
+        content: '❌ Kein passender Titel gefunden.',
+        ephemeral: true
+      });
+    }
+
+    url = results[0].url;
+    title = results[0].title;
+  }
+
+  queue.songs.push({ title, url });
+
+  if (!queue.connection) {
+    queue.connection = joinVoiceChannel({
+      channelId: voiceChannel.id,
+      guildId: interaction.guild.id,
+      adapterCreator: interaction.guild.voiceAdapterCreator,
+      selfDeaf: true
+    });
+
+    queue.connection.subscribe(queue.player);
+
+    try {
+      await entersState(
+        queue.connection,
+        VoiceConnectionStatus.Ready,
+        20_000
+      );
+    } catch (error) {
+      queue.connection.destroy();
+      queue.connection = null;
+      return interaction.reply({
+        content: '❌ Ich konnte dem Sprachkanal nicht beitreten.',
+        ephemeral: true
+      });
+    }
+  }
+
+  if (!queue.playing) {
+    await playNext(interaction.guild.id, interaction.channel);
+  }
+
+  return interaction.reply(
+    `✅ **${title}** wurde ${queue.playing ? 'zur Warteschlange hinzugefügt' : 'gestartet'}.`
+  );
+}
+
+async function skipMusic(interaction) {
+  const queue = queues.get(interaction.guild.id);
+
+  if (!queue || !queue.playing) {
+    return interaction.reply({
+      content: '❌ Aktuell läuft keine Musik.',
+      ephemeral: true
+    });
+  }
+
+  queue.songs.shift();
+  queue.player.stop();
+
+  return interaction.reply('⏭️ Titel übersprungen.');
+}
+
+async function stopMusic(interaction) {
+  const queue = queues.get(interaction.guild.id);
+
+  if (!queue) {
+    return interaction.reply('❌ Es läuft keine Musik.');
+  }
+
+  queue.songs = [];
+  queue.player.stop();
+  queue.playing = false;
+
+  if (queue.connection) {
+    queue.connection.destroy();
+    queue.connection = null;
+  }
+
+  return interaction.reply('⏹️ Musik gestoppt und Bot aus dem Sprachkanal entfernt.');
+}
+
+async function showQueue(interaction) {
+  const queue = queues.get(interaction.guild.id);
+
+  if (!queue || queue.songs.length === 0) {
+    return interaction.reply('📭 Die Warteschlange ist leer.');
+  }
+
+  const text = queue.songs
+    .slice(0, 10)
+    .map((song, i) => `${i + 1}. ${song.title}`)
+    .join('\\n');
+
+  return interaction.reply(`🎶 **Warteschlange**\\n${text}`);
+}
+
+// Slash Commands:
+//
+// /play titel
+// /skip
+// /queue
+// /stop
+//
+// Beispiel für den Interaction-Handler:
+//
+// if (interaction.commandName === 'play') {
+//   await connectAndPlay(
+//     interaction,
+//     interaction.options.getString('titel', true)
+//   );
+// }
+//
+// if (interaction.commandName === 'skip') await skipMusic(interaction);
+// if (interaction.commandName === 'queue') await showQueue(interaction);
+// if (interaction.commandName === 'stop') await stopMusic(interaction);</pre></div>
+<div class="notice">Benötigte Pakete: <b>npm i discord.js @discordjs/voice play-dl</b>. Der Bot benötigt die Discord-Rechte <b>Connect</b> und <b>Speak</b>. Für einen produktiven Bot sollte der Player-Listener pro Guild beim Erstellen der Queue registriert werden; die gezeigte Grundstruktur ist als Ausgangspunkt gedacht.</div></section>
+
+<section id="applications" class="page"><div class="eyebrow">Management</div><h2>Bewerbungs-System</h2><p class="intro">Bewerbungen für Polizei, Feuerwehr, Rettungsdienst, Moderation oder andere Teams können über Tickets gesammelt und an ein Team weitergeleitet werden.</p>
+<div class="codebox"><div class="codehead"><span>application.js</span><button class="copy" data-copy="applicationcode">Kopieren</button></div><pre class="code" id="applicationcode">const applications = new Map();
+
+function saveApplication(userId, data) {
+  applications.set(userId, {
+    createdAt: new Date(),
+    status: 'offen',
+    ...data
+  });
+}
+
+function setApplicationStatus(userId, status) {
+  const app = applications.get(userId);
+  if (app) app.status = status;
+}</pre></div></section>
+
+<section id="logs" class="page"><div class="eyebrow">Administration</div><h2>Logs & Statistiken</h2><p class="intro">Zentrale Stelle für Join-/Leave-, Moderations- und Bot-Logs. Serverstatistiken können regelmäßig aktualisiert werden.</p>
+<div class="codebox"><div class="codehead"><span>logs.js</span><button class="copy" data-copy="logscode">Kopieren</button></div><pre class="code" id="logscode">async function sendLog(guild, message) {
+  const channel = guild.channels.cache.get(process.env.LOG_CHANNEL_ID);
+  if (channel) await channel.send(`📋 ${message}`).catch(() =&gt; {});
+}
+
+client.on('guildMemberRemove', member =&gt; {
+  sendLog(member.guild, `Mitglied verlassen: ${member.user.tag}`);
+});</pre></div></section>
+
+<section id="warnings" class="page"><div class="eyebrow">Moderation</div><h2>Warn / Mute</h2><p class="intro">Persistente Warnungen kannst du später an eine Datenbank anbinden. Hier ist eine einfache In-Memory-Grundlage.</p>
+<div class="codebox"><div class="codehead"><span>warnings.js</span><button class="copy" data-copy="warningscode">Kopieren</button></div><pre class="code" id="warningscode">const warnings = new Map();
+
+function warn(userId, moderatorId, reason) {
+  const list = warnings.get(userId) || [];
+  list.push({ moderatorId, reason, at: new Date() });
+  warnings.set(userId, list);
+  return list.length;
+}
+
+async function mute(member, durationMs, reason = 'Mute') {
+  await member.timeout(durationMs, reason);
+}</pre></div></section>
+
+<section id="faq" class="page"><div class="eyebrow">Information</div><h2>FAQ & Regeln</h2><p class="intro">Hier kannst du Serverregeln, FAQ, Support-Hinweise und wichtige Informationen zentral darstellen.</p>
+<div class="cards"><div class="card"><h3>Regeln</h3><p>Respektvoll bleiben, keinen Spam, keine unerlaubten Inhalte und die jeweiligen RP-Regeln beachten.</p></div><div class="card"><h3>Support</h3><p>Bei Problemen ein Ticket erstellen und möglichst viele Informationen angeben.</p></div><div class="card"><h3>FAQ</h3><p>Häufige Fragen zu Rollen, Bewerbungen, Verifizierung und RP können hier ergänzt werden.</p></div><div class="card"><h3>Links</h3><p>Discord, Regelwerk, Bewerbungsformular und weitere externe Links können ergänzt werden.</p></div></div></section>
+
+<section id="hamburg" class="page"><div class="eyebrow">Hamburg Emergency Roleplay</div><h2>Hamburg Emergency Roleplay</h2><p class="intro">Ein modularer Discord-Bot-Baukasten für einen Hamburg-Emergency-Roleplay-Server. Enthalten sind Leitstelle, Einsatzverwaltung, Funk, Dienststatus, Einheiten, Bürger-RP, Fahrzeuge, Reports, Dienstgrade und Einsatzprotokolle.</p>
+<div class="rpgrid">
+<div class="rp-card"><h3>🚨 Leitstelle & Einsätze</h3><p>/einsatz erstellen, /einsatz status, /einsatz schließen, /einsatz liste. Einsatznummern, Ort, Stichwort, Priorität und zugewiesene Einheiten werden verwaltet.</p><span class="tag">Polizei</span><span class="tag">Feuerwehr</span><span class="tag">Rettungsdienst</span></div>
+<div class="rp-card"><h3>📻 Funk & Dienststatus</h3><p>/dienst an, /dienst aus, /funk, /status. Einheiten können ihren Status melden und über einen RP-Funkkanal kommunizieren.</p><span class="tag">10-Codes</span><span class="tag">Status</span></div>
+<div class="rp-card"><h3>🚓 Einheiten & Fahrzeuge</h3><p>Einheiten registrieren, Fahrzeuge zuweisen, Besatzungen verwalten und Fahrzeugstatus speichern.</p><span class="tag">NEF</span><span class="tag">RTW</span><span class="tag">LF</span><span class="tag">Streifenwagen</span></div>
+<div class="rp-card"><h3>👮 Polizei-RP</h3><p>Personal, Dienstgrade, Streifen, Kontrollen, Verwarnungen, Haftbefehle und Einsatzberichte als RP-Daten modellieren.</p></div>
+<div class="rp-card"><h3>🚒 Feuerwehr-RP</h3><p>Fahrzeuge, Wachen, Einsatzmittel, Alarmierungen und Einsatzberichte für Feuerwehr-RP.</p></div>
+<div class="rp-card"><h3>🚑 Rettungsdienst-RP</h3><p>Patienten-RP, Rettungsmittel, Statusmeldungen, Übergaben und Einsatzdokumentation.</p></div>
+<div class="rp-card"><h3>🧑 Bürger-RP</h3><p>Charaktere, Namen, Berufe, Fahrzeuge, Ausweise und RP-relevante Notizen verwalten.</p></div>
+<div class="rp-card"><h3>📑 Reports & Verwaltung</h3><p>Einsatzberichte, Dienstberichte, Beschwerden und interne Notizen mit Rollen-/Rechteprüfung.</p></div>
+</div>
+<div class="codebox"><div class="codehead"><span>hamburg-rp.js · Kernsystem</span><button class="copy" data-copy="hamburgrpcode">Kopieren</button></div><pre class="code" id="hamburgrpcode">const { Events } = require('discord.js');
+
+const operations = new Map();
+let nextOperationId = 1000;
+
+function createOperation({ type, keyword, location, priority, caller }) {
+  const id = nextOperationId++;
+  const operation = {
+    id,
+    type,              // POLIZEI, FEUERWEHR, RD
+    keyword,
+    location,
+    priority: priority || 'normal',
+    caller,
+    status: 'offen',
+    units: [],
+    createdAt: new Date()
+  };
+  operations.set(id, operation);
+  return operation;
+}
+
+function assignUnit(operationId, unit) {
+  const operation = operations.get(operationId);
+  if (!operation) throw new Error('Einsatz nicht gefunden');
+  if (!operation.units.includes(unit)) operation.units.push(unit);
+  return operation;
+}
+
+function setOperationStatus(operationId, status) {
+  const operation = operations.get(operationId);
+  if (!operation) throw new Error('Einsatz nicht gefunden');
+  operation.status = status;
+  return operation;
+}
+
+function formatOperation(operation) {
+  return [
+    `🚨 Einsatz #${operation.id}`,
+    `Art: ${operation.type}`,
+    `Stichwort: ${operation.keyword}`,
+    `Ort: ${operation.location}`,
+    `Priorität: ${operation.priority}`,
+    `Status: ${operation.status}`,
+    `Einheiten: ${operation.units.join(', ') || 'keine'}`
+  ].join('\\n');
+}
+
+async function reportOperation(channel, operation) {
+  await channel.send(`\\`\\`\\`\\n${formatOperation(operation)}\\n\\`\\`\\``);
+}
+
+// Beispiel-Events:
+// /einsatz erstellen → createOperation(...)
+// /einsatz einheit → assignUnit(...)
+// /einsatz status → setOperationStatus(...)
+// /einsatz melden → reportOperation(...)
+
+client.on(Events.InteractionCreate, async interaction =&gt; {
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === 'einsatz') {
+    const sub = interaction.options.getSubcommand();
+
+    if (sub === 'erstellen') {
+      const operation = createOperation({
+        type: interaction.options.getString('type', true).toUpperCase(),
+        keyword: interaction.options.getString('stichwort', true),
+        location: interaction.options.getString('ort', true),
+        priority: interaction.options.getString('prioritaet') || 'normal',
+        caller: interaction.user.id
+      });
+
+      return interaction.reply({
+        content: formatOperation(operation),
+        ephemeral: false
+      });
+    }
+
+    if (sub === 'status') {
+      const id = interaction.options.getInteger('id', true);
+      const status = interaction.options.getString('status', true);
+      const operation = setOperationStatus(id, status);
+      return interaction.reply(formatOperation(operation));
+    }
+  }
+});
+
+// Wichtig: Für einen echten Server die Datenbank statt Map verwenden
+// und für jede Funktion Discord-Rollen/Berechtigungen prüfen.</pre></div>
+<div class="notice">Das Hamburg-RP-Modul ist bewusst modular: Die Einsatzverwaltung ist eine Grundlage. Für einen vollständigen Produktiv-Bot sollten Datenbank, Slash-Command-Registrierung, Rollenrechte, Persistenz, Audit-Logs und die konkrete Serverstruktur ergänzt werden.</div></section>
+</main></div><div class="footer">PahoyaaSupport · Beispielprojekt · Token niemals im Code veröffentlichen</div>
+</div></div>
+<script>
+const buttons=[...document.querySelectorAll('.nav button')], pages=[...document.querySelectorAll('.page')];
+buttons.forEach(b=>b.addEventListener('click',()=>{buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');pages.forEach(p=>p.classList.toggle('active',p.id===b.dataset.page));}));
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{const el=document.getElementById(btn.dataset.copy);try{await navigator.clipboard.writeText(el.textContent);btn.textContent='Kopiert ✓';setTimeout(()=>btn.textContent='Kopieren',1300)}catch(e){btn.textContent='Nicht möglich';setTimeout(()=>btn.textContent='Kopieren',1300)}}));
+</script></body></html>
