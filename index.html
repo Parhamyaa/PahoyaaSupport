@@ -19,6 +19,21 @@ header p{margin:12px 0 0;color:#9aa1aa;max-width:760px;line-height:1.6}.content{
 .rp-card h3{margin:0 0 7px}.rp-card p{margin:0;color:#9199a2;line-height:1.55;font-size:14px}
 .tag{display:inline-block;margin:5px 5px 0 0;padding:5px 8px;border-radius:999px;background:#071b22;color:var(--blue);border:1px solid #123e49;font-size:11px}
 @media(max-width:800px){.rpgrid{grid-template-columns:1fr}}
+
+.local-builder{border:1px solid #17313a;background:linear-gradient(145deg,#071014,#030303);border-radius:16px;padding:20px;margin-top:18px}
+.local-builder textarea{width:100%;min-height:170px;resize:vertical;background:#020405;color:#e9fbff;border:1px solid #19353d;border-radius:12px;padding:14px;font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;outline:none}
+.local-builder textarea:focus{border-color:#1b8da8;box-shadow:0 0 0 3px #06232b}
+.builder-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.builder-btn{border:1px solid #17657a;background:#071b22;color:#66d9ff;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:800}
+.builder-btn.primary{background:#0b4d60;border-color:#21a5c5;color:#fff}
+.builder-examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.builder-example{border:1px solid #18343c;background:#05090b;color:#a9cbd2;border-radius:999px;padding:7px 10px;cursor:pointer;font-size:12px}
+.builder-status{margin-top:12px;color:#8fa7ad;font-size:13px;min-height:20px}
+.builder-result{margin-top:16px;border:1px solid #16272c;border-radius:14px;overflow:hidden;background:#050505}
+.builder-result-head{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid #142126;color:#aeb6bc;font-size:12px}
+.builder-code{padding:18px;overflow:auto;color:#d7f7ff;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;max-height:700px}
+.module-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.module-pill{padding:5px 8px;border-radius:999px;background:#071b22;color:#66d9ff;font-size:11px;border:1px solid #123e49}
 </style>
 </head>
 <body><div id="app"><div class="shell">
@@ -38,6 +53,7 @@ header p{margin:12px 0 0;color:#9aa1aa;max-width:760px;line-height:1.6}.content{
 <button data-page="warnings">Warn / Mute</button>
 <button data-page="faq">FAQ & Regeln</button>
 <button data-page="hamburg">Hamburg Emergency Roleplay</button>
+<button data-page="builder">🧩 Bot Script Builder</button>
 </nav></aside>
 <main class="main">
 <section id="start" class="page active"><div class="eyebrow">PahoyaaSupport</div><h2>Willkommen</h2><p class="intro">Klicke links eine Kategorie an. Jede Seite erklärt kurz, was du brauchst, und zeigt darunter passenden Beispiel-Code.</p><div class="cards"><div class="card"><h3><span class="dot"></span>Discord Bot</h3><p>Ein Bot reagiert auf Befehle und Events. Dafür brauchst du eine Bot-Anwendung im Discord Developer Portal und eine JavaScript-Laufzeit wie Node.js.</p><span class="pill">discord.js</span></div><div class="card"><h3><span class="dot"></span>Module</h3><p>Installiere discord.js und speichere deinen Bot-Token sicher in einer Umgebungsvariable – nicht direkt im Code.</p><span class="pill">Node.js</span></div></div><div class="notice">Die Codebeispiele sind als Grundlage gedacht. Vor dem Einsatz musst du Rollen, Channel-IDs, Berechtigungen und die gewünschte Konfiguration anpassen.</div></section>
@@ -538,10 +554,927 @@ client.on(Events.InteractionCreate, async interaction =&gt; {
 // Wichtig: Für einen echten Server die Datenbank statt Map verwenden
 // und für jede Funktion Discord-Rollen/Berechtigungen prüfen.</pre></div>
 <div class="notice">Das Hamburg-RP-Modul ist bewusst modular: Die Einsatzverwaltung ist eine Grundlage. Für einen vollständigen Produktiv-Bot sollten Datenbank, Slash-Command-Registrierung, Rollenrechte, Persistenz, Audit-Logs und die konkrete Serverstruktur ergänzt werden.</div></section>
+
+<section id="builder" class="page">
+<div class="eyebrow">Offline · Regelbasiert</div>
+<h2>🧩 Bot Script Builder</h2>
+<p class="intro">
+  Keine KI, keine API und kein Backend. Beschreibe deinen Discord-Bot frei oder kombiniere
+  mehrere Module. Der Generator erkennt bekannte Begriffe und setzt die passenden lokalen
+  Templates zusammen.
+</p>
+
+<div class="local-builder">
+<textarea id="builderPrompt" maxlength="12000" placeholder="Beispiel: Hamburg RP Bot mit Polizei, Feuerwehr, Rettungsdienst, Leitstelle, Dienststatus, Fahrzeuge, Tickets, Warnungen, Logs, Anti-Raid und Musik"></textarea>
+<div class="builder-examples">
+<button class="builder-example" data-example="Hamburg RP mit Polizei Feuerwehr Rettungsdienst Leitstelle Dienststatus Fahrzeuge Einsätze Funk und Dienstgrade">🚨 Hamburg RP</button>
+<button class="builder-example" data-example="Moderationsbot mit Ban Kick Timeout Warn Mute Purge Anti Spam Anti Raid AutoMod und Logs">🛡️ Security</button>
+<button class="builder-example" data-example="Musikbot mit Play Pause Resume Skip Stop Queue Loop Volume und Leave">🎵 Musik</button>
+<button class="builder-example" data-example="Community Bot mit Welcome Auto Role Verify Tickets Giveaway Bewerbung XP Level Economy und Logs">🌐 Community</button>
+<button class="builder-example" data-example="Ticket System mit Buttons Kategorien Support Rolle Claim Close Transcript und Logs">🎫 Tickets</button>
+</div>
+<div class="builder-actions">
+<button id="builderGenerate" class="builder-btn primary">⚡ Templates zusammenbauen</button>
+<button id="builderReset" class="builder-btn">Zurücksetzen</button>
+</div>
+<div id="builderStatus" class="builder-status"></div>
+<div class="module-list" id="moduleList"></div>
+<div class="builder-result">
+<div class="builder-result-head"><span>Generierter Discord-Bot-Code</span><button id="builderCopy" class="copy">Kopieren</button></div>
+<pre id="builderResult" class="builder-code">Dein kombinierter Code erscheint hier.</pre>
+</div>
+</div>
+
+<div class="notice">
+<strong>Hinweis:</strong> Der Builder arbeitet vollständig lokal mit Templates und Regeln.
+Je genauer dein Wunsch zu den vorhandenen Modulen passt, desto mehr passende Bausteine
+werden automatisch kombiniert.
+</div>
+</section>
 </main></div><div class="footer">PahoyaaSupport · Beispielprojekt · Token niemals im Code veröffentlichen</div>
 </div></div>
 <script>
 const buttons=[...document.querySelectorAll('.nav button')], pages=[...document.querySelectorAll('.page')];
 buttons.forEach(b=>b.addEventListener('click',()=>{buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');pages.forEach(p=>p.classList.toggle('active',p.id===b.dataset.page));}));
 document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{const el=document.getElementById(btn.dataset.copy);try{await navigator.clipboard.writeText(el.textContent);btn.textContent='Kopiert ✓';setTimeout(()=>btn.textContent='Kopieren',1300)}catch(e){btn.textContent='Nicht möglich';setTimeout(()=>btn.textContent='Kopieren',1300)}}));
+
+// ===== LOCAL DISCORD BOT SCRIPT BUILDER =====
+const BUILDER_TEMPLATES = {
+  base: {
+    label: 'Grundgerüst',
+    keywords: ['bot', 'discord', 'grundgerüst', 'start', 'basis'],
+    packages: ['discord.js', 'dotenv'],
+    files: {
+      'index.js': `require('dotenv').config();
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildVoiceStates
+  ],
+  partials: [Partials.Channel, Partials.Message, Partials.GuildMember]
+});
+
+client.once('ready', () => {
+  console.log('Online als ' + client.user.tag);
+});
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+  // Hier werden die Module angeschlossen.
+});
+
+client.login(process.env.DISCORD_TOKEN);`
+    }
+  },
+
+  moderation: {
+    label: 'Moderation',
+    keywords: ['moderation','moderator','mod','ban','bannen','kick','kicken','timeout','mute','warn','warning','verwarn','purge','clear','löschen','softban','unban'],
+    packages: ['discord.js'],
+    files: {
+      'modules/moderation.js': `const { PermissionFlagsBits } = require('discord.js');
+
+async function ban(interaction, member, reason = 'Kein Grund angegeben') {
+  if (!interaction.member.permissions.has(PermissionFlagsBits.BanMembers))
+    return interaction.reply({ content: 'Keine Berechtigung.', ephemeral: true });
+
+  await member.ban({ reason });
+  return interaction.reply('🔨 ' + member.user.tag + ' wurde gebannt.');
+}
+
+async function kick(interaction, member, reason = 'Kein Grund angegeben') {
+  if (!interaction.member.permissions.has(PermissionFlagsBits.KickMembers))
+    return interaction.reply({ content: 'Keine Berechtigung.', ephemeral: true });
+
+  await member.kick(reason);
+  return interaction.reply('👢 ' + member.user.tag + ' wurde gekickt.');
+}
+
+async function timeout(interaction, member, duration = 10 * 60 * 1000, reason = 'Timeout') {
+  if (!interaction.member.permissions.has(PermissionFlagsBits.ModerateMembers))
+    return interaction.reply({ content: 'Keine Berechtigung.', ephemeral: true });
+
+  await member.timeout(duration, reason);
+  return interaction.reply('⏱️ Timeout gesetzt.');
+}
+
+async function warn(userId, moderatorId, reason) {
+  return { userId, moderatorId, reason, createdAt: new Date() };
+}
+
+module.exports = { ban, kick, timeout, warn };`
+    }
+  },
+
+  security: {
+    label: 'Security / Anti-Raid / Anti-Spam',
+    keywords: ['security','sicherheit','anti-raid','antiraid','raid','anti-join','anti join','anti-spam','antispam','spam','anti-nuke','antinuke','nuke','automod','auto mod','lockdown','mass join','join raid'],
+    packages: ['discord.js'],
+    files: {
+      'modules/security.js': `const joins = new Map();
+const messages = new Map();
+
+function registerJoin(guildId) {
+  const now = Date.now();
+  const list = (joins.get(guildId) || []).filter(t => now - t < 60_000);
+  list.push(now);
+  joins.set(guildId, list);
+  return list.length;
+}
+
+async function antiSpam(message, timeoutMs = 60_000) {
+  if (!message.guild || message.author.bot) return false;
+
+  const key = message.guild.id + ':' + message.author.id;
+  const now = Date.now();
+  const list = (messages.get(key) || []).filter(t => now - t < 5_000);
+  list.push(now);
+  messages.set(key, list);
+
+  if (list.length >= 6) {
+    await message.member.timeout(timeoutMs, 'Anti-Spam').catch(() => {});
+    return true;
+  }
+  return false;
+}
+
+function raidDetected(guildId, threshold = 8) {
+  return registerJoin(guildId) >= threshold;
+}
+
+module.exports = { antiSpam, raidDetected };`
+    }
+  },
+
+  ticket: {
+    label: 'Ticket System',
+    keywords: ['ticket','tickets','support','support ticket','hilfe','claim','ticket schließen','ticket schliessen','transcript'],
+    packages: ['discord.js'],
+    files: {
+      'modules/tickets.js': `const { ChannelType, PermissionFlagsBits } = require('discord.js');
+
+async function createTicket(interaction) {
+  const existing = interaction.guild.channels.cache.find(
+    c => c.topic === 'ticket:' + interaction.user.id
+  );
+
+  if (existing) {
+    return interaction.reply({ content: 'Du hast bereits ein Ticket: ' + existing, ephemeral: true });
+  }
+
+  const channel = await interaction.guild.channels.create({
+    name: 'ticket-' + interaction.user.username.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 20),
+    type: ChannelType.GuildText,
+    topic: 'ticket:' + interaction.user.id,
+    permissionOverwrites: [
+      {
+        id: interaction.guild.roles.everyone.id,
+        deny: [PermissionFlagsBits.ViewChannel]
+      },
+      {
+        id: interaction.user.id,
+        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]
+      },
+      {
+        id: process.env.SUPPORT_ROLE_ID,
+        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]
+      }
+    ]
+  });
+
+  return interaction.reply({ content: '🎫 Ticket erstellt: ' + channel, ephemeral: true });
+}
+
+module.exports = { createTicket };`
+    }
+  },
+
+  welcome: {
+    label: 'Welcome / Auto-Role',
+    keywords: ['welcome','willkommen','begrüßung','begrussung','auto-role','autorole','auto role','member join','beitritt','neues mitglied'],
+    packages: ['discord.js'],
+    files: {
+      'modules/welcome.js': `const { Events } = require('discord.js');
+
+function setupWelcome(client) {
+  client.on(Events.GuildMemberAdd, async member => {
+    const role = member.guild.roles.cache.get(process.env.MEMBER_ROLE_ID);
+    if (role) await member.roles.add(role).catch(() => {});
+
+    const channel = member.guild.channels.cache.get(process.env.WELCOME_CHANNEL_ID);
+    if (channel) await channel.send('👋 Willkommen ' + member + '!');
+  });
+}
+
+module.exports = { setupWelcome };`
+    }
+  },
+
+  verify: {
+    label: 'Verify',
+    keywords: ['verify','verification','verifizierung','verifizieren','verified','bestätigung','bestaetigung','captcha'],
+    packages: ['discord.js'],
+    files: {
+      'modules/verify.js': `async function verify(interaction) {
+  const role = interaction.guild.roles.cache.get(process.env.VERIFIED_ROLE_ID);
+
+  if (!role) {
+    return interaction.reply({ content: 'Verify-Rolle nicht gefunden.', ephemeral: true });
+  }
+
+  await interaction.member.roles.add(role);
+  return interaction.reply({ content: '✅ Erfolgreich verifiziert.', ephemeral: true });
+}
+
+module.exports = { verify };`
+    }
+  },
+
+  music: {
+    label: 'Musik',
+    keywords: ['musik','music','song','songs','play','youtube','audio','voice music','musikbot','musik bot','queue','warteschlange','skip','pause','resume','loop','lautstärke','lautstaerke','volume','leave voice'],
+    packages: ['discord.js', '@discordjs/voice', 'play-dl'],
+    files: {
+      'modules/music.js': `const {
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  AudioPlayerStatus,
+  NoSubscriberBehavior,
+  VoiceConnectionStatus,
+  entersState
+} = require('@discordjs/voice');
+const play = require('play-dl');
+
+const queues = new Map();
+
+function getQueue(guildId) {
+  if (!queues.has(guildId)) {
+    const player = createAudioPlayer({
+      behaviors: { noSubscriber: NoSubscriberBehavior.Pause }
+    });
+    queues.set(guildId, { songs: [], player, connection: null, playing: false });
+  }
+  return queues.get(guildId);
+}
+
+async function playMusic(interaction, query) {
+  const voice = interaction.member.voice.channel;
+  if (!voice) return interaction.reply({ content: '❌ Betritt zuerst einen Sprachkanal.', ephemeral: true });
+
+  const queue = getQueue(interaction.guild.id);
+
+  let url = query;
+  let title = query;
+
+  if (!/^https?:\\/\\//i.test(query)) {
+    const results = await play.search(query, {
+      limit: 1,
+      source: { youtube: 'video' }
+    });
+    if (!results.length) return interaction.reply({ content: '❌ Titel nicht gefunden.', ephemeral: true });
+    url = results[0].url;
+    title = results[0].title;
+  }
+
+  queue.songs.push({ url, title });
+
+  if (!queue.connection) {
+    queue.connection = joinVoiceChannel({
+      channelId: voice.id,
+      guildId: interaction.guild.id,
+      adapterCreator: interaction.guild.voiceAdapterCreator,
+      selfDeaf: true
+    });
+
+    queue.connection.subscribe(queue.player);
+    await entersState(queue.connection, VoiceConnectionStatus.Ready, 20_000);
+  }
+
+  if (!queue.playing) {
+    const song = queue.songs[0];
+    const stream = await play.stream(song.url, { discordPlayerCompatibility: true });
+    queue.player.play(createAudioResource(stream.stream, { inputType: stream.type }));
+    queue.playing = true;
+
+    queue.player.once(AudioPlayerStatus.Idle, () => {
+      queue.songs.shift();
+      queue.playing = false;
+    });
+  }
+
+  return interaction.reply('🎵 ' + title + ' wurde hinzugefügt.');
+}
+
+function skip(interaction) {
+  const queue = queues.get(interaction.guild.id);
+  if (!queue) return interaction.reply('❌ Keine Musik aktiv.');
+  queue.player.stop();
+  return interaction.reply('⏭️ Übersprungen.');
+}
+
+function stop(interaction) {
+  const queue = queues.get(interaction.guild.id);
+  if (!queue) return interaction.reply('❌ Keine Musik aktiv.');
+
+  queue.songs = [];
+  queue.player.stop();
+  queue.playing = false;
+  if (queue.connection) queue.connection.destroy();
+  queue.connection = null;
+
+  return interaction.reply('⏹️ Musik gestoppt.');
+}
+
+module.exports = { playMusic, skip, stop };`
+    }
+  },
+
+  giveaway: {
+    label: 'Giveaway',
+    keywords: ['giveaway','giveaways','gewinnspiel','verlosung','preis','winner','gewinner'],
+    packages: ['discord.js'],
+    files: {
+      'modules/giveaway.js': `async function startGiveaway(channel, prize, durationMs) {
+  const message = await channel.send(
+    '🎉 **Giveaway**\\nPreis: **' + prize + '**\\nReagiere mit 🎉!'
+  );
+
+  await message.react('🎉');
+
+  setTimeout(async () => {
+    const fresh = await channel.messages.fetch(message.id);
+    const reaction = fresh.reactions.cache.get('🎉');
+    const users = reaction ? await reaction.users.fetch() : new Map();
+    const participants = [...users.values()].filter(user => !user.bot);
+
+    if (!participants.length) return channel.send('Keine Teilnehmer.');
+
+    const winner = participants[Math.floor(Math.random() * participants.length)];
+    channel.send('🎉 Gewinner: ' + winner + ' — **' + prize + '**');
+  }, durationMs);
+}
+
+module.exports = { startGiveaway };`
+    }
+  },
+
+  applications: {
+    label: 'Bewerbungen',
+    keywords: ['bewerbung','bewerbungen','application','applications','bewerben','team bewerbung','polizei bewerbung','feuerwehr bewerbung','rettungsdienst bewerbung'],
+    packages: ['discord.js'],
+    files: {
+      'modules/applications.js': `const applications = new Map();
+
+function createApplication(userId, data) {
+  const application = {
+    id: Date.now(),
+    userId,
+    status: 'offen',
+    createdAt: new Date(),
+    ...data
+  };
+  applications.set(application.id, application);
+  return application;
+}
+
+function setApplicationStatus(id, status) {
+  const application = applications.get(id);
+  if (!application) throw new Error('Bewerbung nicht gefunden.');
+  application.status = status;
+  return application;
+}
+
+module.exports = { createApplication, setApplicationStatus };`
+    }
+  },
+
+  logs: {
+    label: 'Logs / Audit',
+    keywords: ['log','logs','logging','audit','audit log','protokoll','protokolle','statistik','statistiken','server stats','moderationslog'],
+    packages: ['discord.js'],
+    files: {
+      'modules/logs.js': `async function sendLog(guild, message) {
+  const channel = guild.channels.cache.get(process.env.LOG_CHANNEL_ID);
+  if (channel) await channel.send('📋 ' + message).catch(() => {});
+}
+
+function moderationLog(action, moderator, target, reason) {
+  return {
+    action,
+    moderator: moderator?.id,
+    target: target?.id,
+    reason: reason || 'Kein Grund',
+    createdAt: new Date()
+  };
+}
+
+module.exports = { sendLog, moderationLog };`
+    }
+  },
+
+  warnings: {
+    label: 'Warn / Mute',
+    keywords: ['warn','warning','warnings','verwarnung','verwarnungen','mute','mutes','stumm','stummgeschaltet'],
+    packages: ['discord.js'],
+    files: {
+      'modules/warnings.js': `const warnings = new Map();
+
+function addWarning(userId, moderatorId, reason) {
+  const list = warnings.get(userId) || [];
+  list.push({
+    moderatorId,
+    reason,
+    createdAt: new Date()
+  });
+  warnings.set(userId, list);
+  return list.length;
+}
+
+async function mute(member, durationMs, reason = 'Mute') {
+  await member.timeout(durationMs, reason);
+}
+
+function getWarnings(userId) {
+  return warnings.get(userId) || [];
+}
+
+module.exports = { addWarning, mute, getWarnings };`
+    }
+  },
+
+  economy: {
+    label: 'Economy',
+    keywords: ['economy','wirtschaft','geld','coins','coinsystem','balance','guthaben','daily','shop','kaufen','verkaufen','bank','cash'],
+    packages: ['discord.js'],
+    files: {
+      'modules/economy.js': `const balances = new Map();
+
+function getBalance(userId) {
+  return balances.get(userId) || 0;
+}
+
+function addMoney(userId, amount) {
+  const current = getBalance(userId);
+  balances.set(userId, current + amount);
+  return getBalance(userId);
+}
+
+function removeMoney(userId, amount) {
+  const current = getBalance(userId);
+  if (current < amount) return false;
+  balances.set(userId, current - amount);
+  return true;
+}
+
+module.exports = { getBalance, addMoney, removeMoney };`
+    }
+  },
+
+  leveling: {
+    label: 'XP / Leveling',
+    keywords: ['xp','level','leveling','levelsystem','rang','rank','rankings','leaderboard','leaderboard','erfahrung','experience'],
+    packages: ['discord.js'],
+    files: {
+      'modules/leveling.js': `const profiles = new Map();
+
+function getProfile(userId) {
+  if (!profiles.has(userId)) {
+    profiles.set(userId, { xp: 0, level: 1 });
+  }
+  return profiles.get(userId);
+}
+
+function addXP(userId, amount) {
+  const profile = getProfile(userId);
+  profile.xp += amount;
+
+  const required = profile.level * 100;
+  if (profile.xp >= required) {
+    profile.xp -= required;
+    profile.level += 1;
+    return { profile, levelUp: true };
+  }
+
+  return { profile, levelUp: false };
+}
+
+module.exports = { getProfile, addXP };`
+    }
+  },
+
+  roles: {
+    label: 'Rollen / Permissions',
+    keywords: ['rolle','rollen','role','roles','permission','permissions','rechte','berechtigung','berechtigungen','role menu','reaction role','autorole'],
+    packages: ['discord.js'],
+    files: {
+      'modules/roles.js': `async function addRole(member, roleId) {
+  const role = member.guild.roles.cache.get(roleId);
+  if (!role) throw new Error('Rolle nicht gefunden.');
+  if (role.position >= member.guild.members.me.roles.highest.position) {
+    throw new Error('Bot-Rolle ist nicht hoch genug.');
+  }
+  await member.roles.add(role);
+}
+
+async function removeRole(member, roleId) {
+  const role = member.guild.roles.cache.get(roleId);
+  if (!role) throw new Error('Rolle nicht gefunden.');
+  await member.roles.remove(role);
+}
+
+module.exports = { addRole, removeRole };`
+    }
+  },
+
+  rp: {
+    label: 'Roleplay',
+    keywords: ['roleplay','rp','role play','einsatz','leitstelle','funk','dienststatus','dienst','polizei','feuerwehr','rettungsdienst','rd','emergency','notruf','streife','streifenwagen','fahrzeugverwaltung','einheit','einheiten','dienstgrad','dienstgrade','bürger','buerger','fraktion','fraktionen','wache','wachen'],
+    packages: ['discord.js'],
+    files: {
+      'modules/roleplay.js': `const operations = new Map();
+const units = new Map();
+let nextOperationId = 1000;
+
+function createOperation(data) {
+  const operation = {
+    id: nextOperationId++,
+    status: 'offen',
+    units: [],
+    createdAt: new Date(),
+    ...data
+  };
+  operations.set(operation.id, operation);
+  return operation;
+}
+
+function assignUnit(operationId, unit) {
+  const operation = operations.get(operationId);
+  if (!operation) throw new Error('Einsatz nicht gefunden.');
+  if (!operation.units.includes(unit)) operation.units.push(unit);
+  return operation;
+}
+
+function setOperationStatus(operationId, status) {
+  const operation = operations.get(operationId);
+  if (!operation) throw new Error('Einsatz nicht gefunden.');
+  operation.status = status;
+  return operation;
+}
+
+function setDuty(userId, department, status) {
+  units.set(userId, { department, status, updatedAt: new Date() });
+  return units.get(userId);
+}
+
+function formatOperation(op) {
+  return [
+    '🚨 Einsatz #' + op.id,
+    'Art: ' + (op.type || 'nicht angegeben'),
+    'Stichwort: ' + (op.keyword || 'nicht angegeben'),
+    'Ort: ' + (op.location || 'nicht angegeben'),
+    'Priorität: ' + (op.priority || 'normal'),
+    'Status: ' + op.status,
+    'Einheiten: ' + (op.units.join(', ') || 'keine')
+  ].join('\\\\n');
+}
+
+module.exports = {
+  createOperation,
+  assignUnit,
+  setOperationStatus,
+  setDuty,
+  formatOperation
+};`
+    }
+  },
+
+  voice: {
+    label: 'Voice / Sprachkanäle',
+    keywords: ['voice','sprachkanal','sprachkanäle','sprachkanale','voice channel','voice channels','join voice','temporary voice','temp voice','musik voice'],
+    packages: ['discord.js'],
+    files: {
+      'modules/voice.js': `const { ChannelType } = require('discord.js');
+
+async function createTempVoice(guild, user) {
+  const channel = await guild.channels.create({
+    name: '🔊 ' + user.username,
+    type: ChannelType.GuildVoice,
+    parent: process.env.TEMP_VOICE_CATEGORY_ID || undefined
+  });
+
+  await channel.permissionOverwrites.edit(user.id, {
+    ManageChannels: true,
+    Connect: true,
+    Speak: true
+  });
+
+  return channel;
+}
+
+module.exports = { createTempVoice };`
+    }
+  },
+
+  poll: {
+    label: 'Umfragen',
+    keywords: ['umfrage','umfragen','poll','polls','abstimmung','abstimmungen','voting','vote'],
+    packages: ['discord.js'],
+    files: {
+      'modules/polls.js': `async function createPoll(channel, question, options = []) {
+  const text = [
+    '📊 **' + question + '**',
+    ...options.map((option, index) => (index + 1) + '. ' + option)
+  ].join('\\\\n');
+
+  return channel.send(text);
+}
+
+module.exports = { createPoll };`
+    }
+  },
+
+  suggestions: {
+    label: 'Vorschläge',
+    keywords: ['suggestion','suggestions','vorschlag','vorschläge','ideen','idea','feedback'],
+    packages: ['discord.js'],
+    files: {
+      'modules/suggestions.js': `async function submitSuggestion(channel, user, text) {
+  return channel.send(
+    '💡 **Vorschlag von ' + user.tag + '**\\\\n' + text
+  );
+}
+
+module.exports = { submitSuggestion };`
+    }
+  },
+
+  reminders: {
+    label: 'Reminder / Scheduler',
+    keywords: ['reminder','remind','erinnerung','erinnerungen','timer','termin','schedule','scheduler','geplant','zeitplan'],
+    packages: ['discord.js'],
+    files: {
+      'modules/reminders.js': `const reminders = [];
+
+function addReminder(userId, channelId, timestamp, text) {
+  const reminder = { userId, channelId, timestamp, text };
+  reminders.push(reminder);
+  return reminder;
+}
+
+function startReminderLoop(client) {
+  setInterval(async () => {
+    const now = Date.now();
+
+    for (let i = reminders.length - 1; i >= 0; i--) {
+      if (reminders[i].timestamp <= now) {
+        const reminder = reminders[i];
+        reminders.splice(i, 1);
+
+        const channel = await client.channels.fetch(reminder.channelId).catch(() => null);
+        if (channel) await channel.send('<@' + reminder.userId + '> ⏰ ' + reminder.text);
+      }
+    }
+  }, 5000);
+}
+
+module.exports = { addReminder, startReminderLoop };`
+    }
+  },
+
+  database: {
+    label: 'Datenbank',
+    keywords: ['datenbank','database','mysql','mariadb','postgres','postgresql','sqlite','mongodb','mongo','db','persistenz','speichern','gespeichert'],
+    packages: ['discord.js'],
+    files: {
+      'modules/database.js': `// Datenbank-Adapter als klare Schnittstelle.
+// Hier kannst du später mysql2, pg, better-sqlite3 oder mongodb anschließen.
+
+async function getGuildConfig(guildId) {
+  // Beispielstruktur; in einer echten DB per SELECT laden.
+  return {
+    guildId,
+    logChannelId: process.env.LOG_CHANNEL_ID || null,
+    supportRoleId: process.env.SUPPORT_ROLE_ID || null
+  };
+}
+
+async function saveGuildConfig(guildId, config) {
+  // Beispielstruktur; in einer echten DB per INSERT/UPDATE speichern.
+  return { guildId, ...config };
+}
+
+module.exports = { getGuildConfig, saveGuildConfig };`
+    }
+  },
+
+  stats: {
+    label: 'Statistiken',
+    keywords: ['statistik','statistiken','stats','server stats','mitgliederzahl','member count','counter','counter bot','charts'],
+    packages: ['discord.js'],
+    files: {
+      'modules/stats.js': `function getGuildStats(guild) {
+  return {
+    members: guild.memberCount,
+    channels: guild.channels.cache.size,
+    roles: guild.roles.cache.size,
+    createdAt: guild.createdAt
+  };
+}
+
+module.exports = { getGuildStats };`
+    }
+  },
+
+  fun: {
+    label: 'Fun',
+    keywords: ['fun','spaß','spass','meme','memes','8ball','würfel','wuerfel','coinflip','joke','witz','random'],
+    packages: ['discord.js'],
+    files: {
+      'modules/fun.js': `function randomItem(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function coinflip() {
+  return Math.random() < 0.5 ? 'Kopf' : 'Zahl';
+}
+
+function dice(sides = 6) {
+  return Math.floor(Math.random() * sides) + 1;
+}
+
+module.exports = { randomItem, coinflip, dice };`
+    }
+  },
+
+  faq: {
+    label: 'FAQ / Regeln',
+    keywords: ['faq','regeln','regelwerk','rules','regel','help','hilfe','commands','befehle','bot help'],
+    packages: ['discord.js'],
+    files: {
+      'modules/faq.js': `const faq = new Map([
+  ['ticket', 'Erstelle ein Ticket mit /ticket.'],
+  ['verify', 'Verifiziere dich mit /verify.'],
+  ['support', 'Nutze das Ticketsystem für Support.']
+]);
+
+function getFaq(topic) {
+  return faq.get(topic.toLowerCase()) || 'Keine Antwort gefunden.';
+}
+
+module.exports = { getFaq };`
+    }
+  }
+};
+
+function normalizeBuilderText(text) {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\\u0300-\\u036f]/g, '')
+    .replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss');
+}
+
+function detectBuilderModules(prompt) {
+  const text = normalizeBuilderText(prompt);
+  const found = [];
+
+  // Always include base.
+  found.push('base');
+
+  for (const [id, template] of Object.entries(BUILDER_TEMPLATES)) {
+    if (id === 'base') continue;
+
+    let score = 0;
+    for (const keyword of template.keywords) {
+      const k = normalizeBuilderText(keyword);
+      if (k && text.includes(k)) score += k.length >= 5 ? 2 : 1;
+    }
+
+    // Stronger combinations
+    if (id === 'rp' && /(hamburg|emergency|leitstelle|einsatz|polizei|feuerwehr|rettungsdienst)/.test(text)) score += 5;
+    if (id === 'security' && /(anti[- ]?raid|anti[- ]?spam|anti[- ]?nuke|automod)/.test(text)) score += 5;
+    if (id === 'music' && /(musikbot|musik bot|music bot)/.test(text)) score += 5;
+    if (id === 'ticket' && /(ticketsystem|ticket system)/.test(text)) score += 5;
+
+    if (score > 0) found.push(id);
+  }
+
+  return [...new Set(found)];
+}
+
+function buildLocalBot(prompt) {
+  const modules = detectBuilderModules(prompt);
+  const selected = modules.map(id => BUILDER_TEMPLATES[id]);
+
+  const packageSet = new Set(['discord.js', 'dotenv']);
+  selected.forEach(t => (t.packages || []).forEach(p => packageSet.add(p)));
+
+  const files = {};
+  selected.forEach(t => Object.assign(files, t.files));
+
+  const configLines = [
+    'DISCORD_TOKEN=dein_bot_token',
+    'CLIENT_ID=deine_application_id',
+    'GUILD_ID=deine_test_server_id',
+    'LOG_CHANNEL_ID=',
+    'SUPPORT_ROLE_ID=',
+    'MEMBER_ROLE_ID=',
+    'WELCOME_CHANNEL_ID=',
+    'VERIFIED_ROLE_ID=',
+    'TEMP_VOICE_CATEGORY_ID='
+  ];
+
+  let output = `// PahoyaaSupport Local Bot Builder
+// Keine KI / keine API.
+// Erkannte Module: ${modules.join(', ')}
+// Anfrage: ${prompt}
+
+`;
+  output += `// ===== INSTALLATION =====
+npm install ${[...packageSet].join(' ')}
+
+`;
+  output += `// ===== .env =====
+${configLines.join('\n')}
+
+`;
+
+  output += `// ===== PROJEKTSTRUKTUR =====
+`;
+  Object.keys(files).forEach(file => output += `${file}\n`);
+  output += '\n';
+
+  for (const [file, code] of Object.entries(files)) {
+    output += `// ===== ${file} =====\n${code}\n\n`;
+  }
+
+  output += `// ===== HINWEIS =====
+`;
+  output += `// Die Module sind lokal kombinierte Templates. Slash-Commands müssen im Discord Developer Portal
+`;
+  output += `// registriert und in deinem Interaction-Handler mit den jeweiligen Funktionen verbunden werden.
+`;
+  output += `// Token und Secrets niemals direkt in den Quellcode schreiben.
+`;
+
+  return { modules, output };
+}
+
+const builderPrompt = document.getElementById('builderPrompt');
+const builderGenerate = document.getElementById('builderGenerate');
+const builderReset = document.getElementById('builderReset');
+const builderStatus = document.getElementById('builderStatus');
+const builderResult = document.getElementById('builderResult');
+const builderCopy = document.getElementById('builderCopy');
+const moduleList = document.getElementById('moduleList');
+
+document.querySelectorAll('.builder-example').forEach(btn => {
+  btn.addEventListener('click', () => {
+    builderPrompt.value = btn.dataset.example;
+    builderPrompt.focus();
+  });
+});
+
+builderGenerate?.addEventListener('click', () => {
+  const prompt = builderPrompt.value.trim();
+
+  if (!prompt) {
+    builderStatus.textContent = 'Bitte beschreibe zuerst deinen Bot.';
+    return;
+  }
+
+  const result = buildLocalBot(prompt);
+  builderResult.textContent = result.output;
+  moduleList.innerHTML = result.modules
+    .map(id => `<span class="module-pill">${BUILDER_TEMPLATES[id].label}</span>`)
+    .join('');
+
+  builderStatus.textContent =
+    `✅ ${result.modules.length} Module erkannt und kombiniert.`;
+});
+
+builderReset?.addEventListener('click', () => {
+  builderPrompt.value = '';
+  builderResult.textContent = 'Dein kombinierter Code erscheint hier.';
+  builderStatus.textContent = '';
+  moduleList.innerHTML = '';
+});
+
+builderCopy?.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(builderResult.textContent);
+    builderCopy.textContent = 'Kopiert ✓';
+    setTimeout(() => builderCopy.textContent = 'Kopieren', 1300);
+  } catch {
+    builderCopy.textContent = 'Nicht möglich';
+    setTimeout(() => builderCopy.textContent = 'Kopieren', 1300);
+  }
+});
+
 </script></body></html>
